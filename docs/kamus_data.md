@@ -504,8 +504,10 @@ Menyimpan pasangan kunci-nilai (*key-value*) konfigurasi apotek dan notifikasi.
 | Kolom | Tipe Data | Nullable | Default | Keterangan |
 |---|---|:---:|:---:|---|
 | `id` | BIGINT UNSIGNED | Tidak | Auto Increment | Primary Key |
-| `kunci` | VARCHAR(100) | Tidak | - | Kode konfigurasi unik (Unique) |
-| `nilai` | TEXT | Ya | NULL | Nilai konfigurasi sistem |
+| `key` | VARCHAR(100) | Tidak | - | Kode konfigurasi unik (Unique) |
+| `value` | TEXT | Ya | NULL | Nilai konfigurasi sistem |
+| `tipe` | VARCHAR(50) | Tidak | 'string' | Tipe data nilai (string, boolean, integer, json) |
+| `keterangan` | VARCHAR(255) | Ya | NULL | Deskripsi parameter pengaturan |
 | `created_at` | TIMESTAMP | Ya | NULL | Waktu pembuatan record |
 | `updated_at` | TIMESTAMP | Ya | NULL | Waktu pembaruan record |
 

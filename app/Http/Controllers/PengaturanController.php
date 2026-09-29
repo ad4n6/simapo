@@ -22,7 +22,7 @@ class PengaturanController extends Controller
      */
     public function index(): View
     {
-        $settings = Pengaturan::pluck('nilai', 'kunci')->toArray();
+        $settings = Pengaturan::pluck('value', 'key')->toArray();
 
         return view('pengaturan.index', compact('settings'));
     }
