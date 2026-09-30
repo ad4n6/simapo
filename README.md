@@ -350,6 +350,16 @@ Untuk keperluan lampiran laporan tugas besar dan tinjauan teknis, dokumen penduk
 - 📄 [**Kamus Data Database (29 Tabel)**](docs/kamus_data.md): Struktur tabel, tipe data, indeks, dan relasi foreign key.
 - 🔐 [**Matriks Hak Akses Role (RBAC)**](docs/hak_akses_role.md): Pembagian hak akses per modul, rute, dan tindakan.
 - 🔄 [**Diagram Alur Sistem (Mermaid)**](docs/diagram_alur.md): Diagram alur kasir POS & FEFO, pengadaan barang, notifikasi Telegram, dan rekonsiliasi kas shift.
+- 📐 [**Diagram UML, ERD & Arsitektur Sistem (`docs/diagrams/`)**](docs/diagrams/):
+  - [Use Case Diagram](docs/diagrams/use_case_diagram.md) (Diagram Utama & per Role)
+  - [Activity Diagram](docs/diagrams/activity_diagram.md) (6 Diagram Alur Bisnis dengan Swimlane)
+  - [Sequence Diagram](docs/diagrams/sequence_diagram.md) (POS FEFO, Scheduler Cron, Auth RBAC, Penerimaan Barang)
+  - [Class Diagram](docs/diagrams/class_diagram.md) (Model Domain, Atribut, Relasi & Service Layer)
+  - [Deployment Diagram](docs/diagrams/deployment_diagram.md) (Topologi VPS Linux, Nginx, PHP-FPM, MySQL & Telegram Cloud)
+  - [State Machine Diagram](docs/diagrams/state_machine_diagram.md) (Status PO, Batch Obat Expired, Shift Kasir)
+  - [Component & Package Diagram](docs/diagrams/component_diagram.md) (Struktur Modular & Ketergantungan Paket)
+  - [Entity Relationship Diagram / ERD](docs/diagrams/erd_diagram.md) (29 Tabel Relasional Database `simapo`)
+  - [Data Flow Diagram / DFD & Arsitektur](docs/diagrams/dfd_arsitektur.md) (DFD Level 0 & DFD Level 1)
 
 ---
 © 2026 **Apotek Bintan 88** — Dikembangkan untuk Mata Kuliah Manajemen Proyek Sistem Informasi.
