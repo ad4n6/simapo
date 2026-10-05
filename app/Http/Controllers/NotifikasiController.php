@@ -24,14 +24,20 @@ class NotifikasiController extends Controller
     {
         $user = Auth::user();
         if (! $user) {
-            return response()->json(['count' => 0, 'data' => []]);
+            return response()->json([
+                'success' => true,
+                'count' => 0,
+                'items' => [],
+                'data' => [],
+            ]);
         }
 
         $query = Notifikasi::where(function ($q) use ($user) {
             $q->where('role_target', 'like', "%{$user->role}%")
-                ->orWhereNull('role_target');
+                ->orWhereNull('role_target')
+                ->orWhere('user_id', $user->id);
         })
-            ->where('dibaca', false)
+            ->whereNull('dibaca_at')
             ->latest();
 
         $count = $query->count();
@@ -42,12 +48,14 @@ class NotifikasiController extends Controller
                 'pesan' => $n->pesan,
                 'tipe' => $n->tipe,
                 'link' => $n->link,
-                'waktu' => $n->created_at->diffForHumans(),
+                'waktu' => $n->created_at ? $n->created_at->diffForHumans() : '',
             ];
         });
 
         return response()->json([
+            'success' => true,
             'count' => $count,
+            'items' => $notifications,
             'data' => $notifications,
         ]);
     }
@@ -61,10 +69,11 @@ class NotifikasiController extends Controller
         if ($user) {
             Notifikasi::where(function ($q) use ($user) {
                 $q->where('role_target', 'like', "%{$user->role}%")
-                    ->orWhereNull('role_target');
+                    ->orWhereNull('role_target')
+                    ->orWhere('user_id', $user->id);
             })
-                ->where('dibaca', false)
-                ->update(['dibaca' => true]);
+                ->whereNull('dibaca_at')
+                ->update(['dibaca_at' => now()]);
         }
 
         return response()->json(['success' => true]);

@@ -22,7 +22,7 @@ window.Simapo = {
         const toast = document.createElement('div');
         toast.className = `flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium transition-all transform duration-300 translate-y-2 opacity-0 ${
             type === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-200' :
-            type === 'error' ? 'bg-rose-50 text-rose-800 border-rose-200' :
+            (type === 'error' || type === 'danger') ? 'bg-rose-50 text-rose-800 border-rose-200' :
             type === 'warning' ? 'bg-amber-50 text-amber-800 border-amber-200' :
             'bg-sky-50 text-sky-800 border-sky-200'
         }`;
@@ -114,10 +114,21 @@ window.Simapo = {
         try {
             const res = await window.fetch(url, config);
             const data = await res.json().catch(() => ({}));
-            return { ok: res.ok, status: res.status, data };
+            return {
+                ok: res.ok,
+                status: res.status,
+                data,
+                ...(typeof data === 'object' && data !== null ? data : {})
+            };
         } catch (error) {
             console.error('Fetch error:', error);
-            return { ok: false, status: 500, data: { message: 'Terjadi kesalahan jaringan atau koneksi terputus.' } };
+            return {
+                ok: false,
+                status: 500,
+                data: { message: 'Terjadi kesalahan jaringan atau koneksi terputus.', success: false },
+                success: false,
+                message: 'Terjadi kesalahan jaringan atau koneksi terputus.'
+            };
         }
     },
 
@@ -133,9 +144,10 @@ window.Simapo = {
         if (!badge || !list) return;
 
         const res = await this.fetch('/notifikasi/unread');
-        if (res.ok && res.data.success) {
-            const count = res.data.count || 0;
-            const items = res.data.items || [];
+        const isSuccess = res.ok && (res.data?.success || res.success);
+        if (isSuccess) {
+            const count = res.data?.count ?? res.count ?? 0;
+            const items = res.data?.items ?? res.items ?? res.data?.data ?? [];
 
             if (count > 0) {
                 badge.textContent = count > 99 ? '99+' : count;

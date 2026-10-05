@@ -225,8 +225,8 @@
 <script>
     async function testKirimTelegram() {
         const btn = document.getElementById('btnTestTelegram');
-        const token = document.getElementById('inputBotToken').value.trim();
-        const chatId = document.getElementById('inputChatId').value.trim();
+        const token = document.getElementById('inputBotToken') ? document.getElementById('inputBotToken').value.trim() : '';
+        const chatId = document.getElementById('inputChatId') ? document.getElementById('inputChatId').value.trim() : '';
 
         btn.disabled = true;
         btn.innerHTML = 'Mengirim Tes...';
@@ -234,16 +234,19 @@
         try {
             const resp = await Simapo.fetch('{{ route("pengaturan.testTelegram") }}', {
                 method: 'POST',
-                body: JSON.stringify({ chat_id: chatId })
+                body: JSON.stringify({ chat_id: chatId, bot_token: token })
             });
 
-            if (resp.success) {
-                Simapo.toast(resp.message || 'Pesan tes berhasil terkirim ke Telegram!', 'success');
+            const isSuccess = resp.success || (resp.ok && resp.data && resp.data.success);
+            const message = resp.message || resp.data?.message;
+
+            if (isSuccess) {
+                Simapo.toast(message || 'Pesan tes berhasil terkirim ke Telegram!', 'success');
             } else {
-                Simapo.toast(resp.message || 'Gagal mengirim pesan tes Telegram.', 'danger');
+                Simapo.toast(message || 'Gagal mengirim pesan tes Telegram.', 'error');
             }
         } catch (e) {
-            Simapo.toast('Terjadi kesalahan saat memanggil API Telegram.', 'danger');
+            Simapo.toast('Terjadi kesalahan saat memanggil API Telegram.', 'error');
         } finally {
             btn.disabled = false;
             btn.innerHTML = `
@@ -262,16 +265,20 @@
                 body: JSON.stringify({ command: command })
             });
 
-            if (resp.success) {
+            const isSuccess = resp.success || (resp.ok && resp.data && resp.data.success);
+            const output = resp.output || resp.data?.output;
+            const message = resp.message || resp.data?.message;
+
+            if (isSuccess) {
                 document.getElementById('consoleTitle').innerText = `Hasil Eksekusi: notifikasi:${command}`;
-                document.getElementById('consoleBody').innerText = resp.output || 'Command selesai dieksekusi tanpa output.';
+                document.getElementById('consoleBody').innerText = output || 'Command selesai dieksekusi tanpa output.';
                 document.getElementById('modalConsoleOutput').classList.remove('hidden');
                 Simapo.toast(`Pengecekan ${command} berhasil dijalankan!`, 'success');
             } else {
-                Simapo.toast(resp.message || 'Gagal mengeksekusi perintah.', 'danger');
+                Simapo.toast(message || 'Gagal mengeksekusi perintah.', 'error');
             }
         } catch (e) {
-            Simapo.toast('Gagal mengeksekusi artisan command.', 'danger');
+            Simapo.toast('Gagal mengeksekusi artisan command.', 'error');
         }
     }
 </script>

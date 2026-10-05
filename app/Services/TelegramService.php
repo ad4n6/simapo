@@ -57,9 +57,10 @@ class TelegramService
         ?string $entitasTipe = null,
         ?int $entitasId = null,
         ?string $chatId = null,
-        bool $forceSend = false
+        bool $forceSend = false,
+        ?string $botToken = null
     ): array {
-        $token = $this->getBotToken();
+        $token = ! empty($botToken) ? trim($botToken) : $this->getBotToken();
         $targetChatId = $chatId ?: $this->getDefaultChatId();
 
         // Cek switch pengaturan jika bukan tes manual

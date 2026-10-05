@@ -605,16 +605,21 @@
                 body: JSON.stringify(payload)
             });
 
-            if (resp.success) {
+            const isSuccess = resp.success || (resp.ok && resp.data && resp.data.success);
+            const trxData = (resp.data && resp.data.data) ? resp.data.data : (resp.data || {});
+
+            if (isSuccess && trxData) {
                 // Tampilkan Modal Sukses
-                document.getElementById('suksesNoTrx').innerText = resp.data.no_transaksi;
-                document.getElementById('suksesTotal').innerText = 'Rp ' + resp.data.total_akhir.toLocaleString('id-ID');
-                document.getElementById('suksesKembalian').innerText = 'Rp ' + resp.data.kembalian.toLocaleString('id-ID');
-                document.getElementById('btnCetakStruk').href = resp.data.cetak_url;
+                document.getElementById('suksesNoTrx').innerText = trxData.no_transaksi || '';
+                document.getElementById('suksesTotal').innerText = 'Rp ' + Number(trxData.total_akhir || 0).toLocaleString('id-ID');
+                document.getElementById('suksesKembalian').innerText = 'Rp ' + Number(trxData.kembalian || 0).toLocaleString('id-ID');
+                document.getElementById('btnCetakStruk').href = trxData.cetak_url || '#';
                 document.getElementById('modalSuksesTrx').classList.remove('hidden');
 
                 // Buka otomatis cetak struk di popup tab baru
-                window.open(resp.data.cetak_url, '_blank', 'width=450,height=650');
+                if (trxData.cetak_url) {
+                    window.open(trxData.cetak_url, '_blank', 'width=450,height=650');
+                }
 
                 // Reset state kasir
                 CART = [];
@@ -625,10 +630,11 @@
                 document.getElementById('resepNo').value = '';
                 setJenisTransaksi('bebas');
             } else {
-                Simapo.toast(resp.message || 'Transaksi gagal diproses.', 'danger');
+                const errorMsg = resp.message || resp.data?.message || 'Transaksi gagal diproses.';
+                Simapo.toast(errorMsg, 'error');
             }
         } catch (e) {
-            Simapo.toast('Terjadi kesalahan koneksi server.', 'danger');
+            Simapo.toast('Terjadi kesalahan koneksi server.', 'error');
         } finally {
             btn.disabled = false;
             btn.innerHTML = `

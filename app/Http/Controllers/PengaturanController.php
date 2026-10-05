@@ -74,7 +74,8 @@ class PengaturanController extends Controller
         $testMsg .= 'Sistem notifikasi otomatis siap memberikan informasi operasional apotek Anda.';
 
         $chatId = $request->input('chat_id');
-        $result = $this->telegramService->kirimPesan($testMsg, 'tes', 'test_ping', null, $chatId, true);
+        $botToken = $request->input('bot_token');
+        $result = $this->telegramService->kirimPesan($testMsg, 'tes', 'test_ping', null, $chatId, true, $botToken);
 
         return response()->json($result);
     }
